@@ -1,0 +1,153 @@
+<html>
+    <meta charset="utf-8">
+    <head></head>
+    <style>
+        body{
+            background-image: url(res/01.jpg);
+            background-size: cover;
+        }
+        #top{
+            width: 120px;
+            height: 150px;
+            position: absolute;
+        }
+    </style>
+    <script>
+        var myrecive="";
+        var sum=5;
+        var girlchange=null;
+        var faceinterval=null;
+        var isMove=false;
+
+        
+        
+       
+        window.onload=function(){
+          init();
+        }
+        var init=function(){
+            var girl=document.getElementById("top");
+            var imagepath="url(res/walk/pic558_01.png)";
+            girl.style.backgroundImage=imagepath;
+            document.onkeydown=myonkeydown;
+            document.onkeyup=myonkeyup;
+        }
+    var myonkeydown=function(event){
+        if(isMove)
+        {
+            return;
+        }
+        var event=event||window.event;
+        var mykey=event.keyCode;
+        if(mykey==37){
+            myrecive="left";
+        }
+        else if(mykey==38){
+            myrecive="up";
+        }
+        else if(mykey==39){
+            myrecive="right";
+        }
+        else if(mykey==40){
+            myrecive="down"
+        }
+        console.log( myrecive);
+        girlmove();
+        girlface();
+    };
+
+    var myonkeyup=function(event){
+        var event=event||window.event;
+        var mykey=event.keyCode;
+        var myup="";
+        
+        
+        if(mykey==37){
+            myup="left";
+        }
+        else if(mykey==38){
+            myup="up";
+        }
+        else if(mykey==39){
+            myup="right";
+        }
+        else if(mykey==40){
+            myup="down";
+        }
+       
+        var mykeyup=myup.toString();
+        console.log( mykeyup)
+        if(mykeyup==myrecive){
+            clearInterval(girlchange);
+            clearInterval(faceinterval);
+            isMove=false;
+        }
+        
+    };
+    
+    var girlmove=function(){
+        isMove=true;
+      girlchange=setInterval(function(){
+        var girl=document.getElementById("top");
+        
+        if(myrecive=="left"){
+        girl.style.left=girl.offsetLeft-sum+"px";
+        }
+        else if(myrecive=="up"){
+            girl.style.top=girl.offsetTop-sum+"px";
+        }
+        else if(myrecive=="right"){
+            girl.style.left=girl.offsetLeft+sum+"px";
+        }
+        else if(myrecive=="down"){
+            girl.style.top=girl.offsetTop+sum+"px";
+        
+        }
+    },100);
+    };
+    var girlface=function(){
+        var mystart=1;
+        var myend=0;
+        if(myrecive=="left"){
+        mystart=9;
+        }
+         else if(myrecive=="up"){
+            mystart=25;
+        }
+        else if(myrecive=="right"){
+            mystart=17;
+        }
+        else if(myrecive=="down"){
+            mystart=1;
+        }
+        myend=mystart+7;
+
+
+        var myindex=mystart;
+         faceinterval=setInterval(function(){
+            if(myindex>myend){
+                myindex=mystart;
+            }
+            var indexstr=myindex.toString();
+            console.log(indexstr);
+            if(indexstr<10){
+                var imagepath="url(res/walk/pic558_0"+indexstr+".png)";
+            }
+            else if(indexstr>10){
+             var imagepath="url(res/walk/pic558_"+indexstr+".png)";
+            }
+            var girl=document.getElementById("top");
+            girl.style.backgroundImage=imagepath;
+            myindex++;
+        },80);
+        
+
+    };
+    
+
+    </script>
+    <body>
+        <div id="top"></div>
+
+    </body>
+</html>
