@@ -1,0 +1,305 @@
+<html>
+    <head>
+     <meta charset="utf-8"/>
+     <title>我的计算器</title>
+<style>
+    body{
+
+        background: black;
+    }
+    #outsideborder{
+        width: 500px;
+        height: 500px;
+        background: rgb(242,242,242); 
+
+        border: 3px;
+        border-style: solid;
+        border-color:white;
+      position:absolute; 
+        left: 100px;
+    }
+    #toparea{
+        /* background-color:; */
+        width: 100%;
+        height:100px;
+    }
+    #centerarea{
+        /* background-color: blue; */
+        width: 100%;
+        height:300px;
+    }
+    #bottomarea{
+        /* background-color: brown; */
+        width: 100%;
+        height:100px;
+    }
+    #toptxt{
+        /* margin-left:10px; */
+        /* padding: 10px; */
+        /* margin-bottom: 10px; */
+        font-weight: bold;
+        color: rgb(85,85,85);
+        position: absolute;
+        left: 30px;
+        top: 20px;
+        height: 35px;
+    }
+    #result{
+        /* margin:0 auto;  */
+        /* margin-left: 10px; */
+        /* padding-top: 10px; */
+        width: 90%;
+        height:25px;
+        background-color: white;
+        text-align: right;
+        /* padding-right: 10px; */
+        border: 3px;
+        border-style: solid;
+        border-color: rgb(230,230,230);
+        position: relative;
+        left:20px;
+        top:50px;
+    }
+    #mytable{
+        width: 400px;
+        height: 100%;
+        margin: 0 auto;
+        position: relative;
+        background-color:red;
+        border-spacing:0px;
+        border: 3px;
+        border-style: solid;
+        border-color: white;
+    }
+    #mytable td{
+        width: 20%;
+        background-color: #ccc;
+        text-align: center;
+        border:10px;
+        border-style: solid;
+        border-color:rgb(242,242,242);
+    }
+    #bottomtable{
+        width: 100%;
+        height:100%;
+        border-spacing :0px;
+        color:#999;
+    }
+    #bottomleft{
+        
+        width: 70%;
+        padding-left: 30px;
+        
+    }
+    #bottomright{
+        width: 30%;
+        text-align: center;
+        padding-right: 30px;
+        text-decoration: underline;
+        
+    }
+</style>
+
+
+
+    </head>
+ 
+    <body>
+        <div id="outsideborder" >
+            
+        <div id="toparea" >
+            <div id="toptxt">我的计算器</div>
+            <div id="result">0</div>
+        </div>
+        <div id="centerarea">
+            <table id="mytable">
+                <tr>
+                    <td>7</td><td>8</td><td>9</td><td>⟵</td><td>c</td>
+                </tr>
+
+                <tr>
+                    <td>4</td><td>5</td><td>6</td><td>x</td><td>÷</td>
+                </tr>
+
+                <tr>
+                    <td>1</td><td>2</td><td>3</td><td>+</td><td>-</td>
+                </tr>
+    
+                <tr>
+                    <td>0</td><td>00</td><td>.</td><td>%</td><td>=</td>
+                </tr>
+
+            </table>
+        </div>
+        <div id="bottomarea">
+            <table id="bottomtable">
+                <tr>
+                    <td id="bottomleft">欢迎使用js计算器</td><td id="bottomright">反馈</td>
+                </tr>
+            </table>
+            
+        </div>
+        </div>
+    </body>
+    <script>
+        const STATUS_LEFT_NUMBER_INPUTTING= 1;
+        const STATUS_RIGHT_NUMBER_INPUTTING = 2;
+
+        const CalculateType_Jia = 1;
+        const CalculateType_Jian = 2;
+        const CalculateType_Chen = 3;
+        const CalculateType_Chu = 4;
+    </script>
+
+    <script>
+
+        //计算器当前状态
+        var status = STATUS_LEFT_NUMBER_INPUTTING;
+        // 当前计算类型
+        var calculateType = 0;
+        //参与运算的运算符左侧数字
+        var leftNumber = 0;
+        //参与运算的运算符右侧数字
+        var rightNumber = 0;
+        //计算器屏幕上要现实的内容
+        var screenContent = 0;
+        //当前的运算符号
+        var calculateType = 0;
+        
+        var resultUI = null;
+        window.onload = function(){
+            console.log("on load");
+
+            var myTable = document.getElementById("mytable");
+            var tdList = myTable.getElementsByTagName("td");
+            resultUI = document.getElementById("result");
+
+            var length = tdList.length;
+            for(var i = 0; i < length; i++){
+            var td = tdList[i];
+                td.addEventListener("click",onTdClick);
+            }
+        };
+
+        var getCalculateTypeByStr = function(str){
+            var type = "";
+            if(str == "+")
+            {
+                type = CalculateType_Jia;
+            }
+            else if(str == "-")
+            {
+                type = CalculateType_Jian;
+            }
+            else if(str == "x")
+            {
+                type = CalculateType_Chen;
+            }
+            else if(str == "÷")
+            {
+                type = CalculateType_Chu;
+            }
+            return type;
+        }
+
+        var calculateJia = function(a,b){
+            return a+b;
+        }
+
+        var calculateJian = function(a,b){
+            return a-b;
+        } 
+
+        var calculateChen = function(a,b){
+            return a*b;
+        } 
+
+        var calculateChu = function(a,b){
+            return a/b;
+        } 
+
+        var calculateNow = function(){
+            var result = 0;
+            if(calculateType == CalculateType_Jia)
+            {
+                result = calculateJia(leftNumber,rightNumber);
+            }
+            else if(calculateType == CalculateType_Jian)
+            {
+                result = calculateJian(leftNumber,rightNumber);
+            }
+            else if(calculateType == CalculateType_Chen)
+            {
+                result = calculateChen(leftNumber,rightNumber);
+            }
+            else if(calculateType == CalculateType_Chu)
+            {
+                result = calculateChu(leftNumber,rightNumber);
+            }
+            resultUI.innerHTML = "计算结果: " + result.toString();
+
+        }
+
+        var onTdClick = function(evt){
+            
+
+            var currentBtnContent = evt.currentTarget.innerHTML;
+            if(currentBtnContent == "+" ||
+               currentBtnContent == "-" ||
+               currentBtnContent == "x" ||
+               currentBtnContent == "÷" )
+            {
+                //是符号
+                if(status == STATUS_LEFT_NUMBER_INPUTTING)
+                {
+                    status = STATUS_RIGHT_NUMBER_INPUTTING;
+                    calculateType = getCalculateTypeByStr(currentBtnContent);
+                    resultUI.innerHTML = currentBtnContent;
+                    return;
+                }
+            }
+            else if(currentBtnContent == "=")
+            {
+               //是等号
+                calculateNow();
+                return;
+            }
+            else
+            {
+                 //是数字
+
+            }
+
+
+            // console.log("onTdClick " + currentBtnContent);
+            // console.log(typeof(currentBtnContent));
+
+            var currentNumber = parseInt(currentBtnContent);
+
+           if(status == STATUS_LEFT_NUMBER_INPUTTING)
+           {
+                leftNumber = leftNumber * 10 + currentNumber;
+                screenContent = leftNumber.toString();
+                console.log("左边数字： " + screenContent);
+
+
+           }else if(status == STATUS_RIGHT_NUMBER_INPUTTING){
+
+                rightNumber = rightNumber * 10 + currentNumber;
+                screenContent = rightNumber.toString();
+                console.log("右边数字： " + screenContent);
+           }
+
+           resultUI.innerHTML = screenContent;
+        }
+
+
+    
+
+     
+
+
+     
+    
+    </script>
+</html>
